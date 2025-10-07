@@ -20,9 +20,13 @@ export class StoreController {
 
   @Post()
   @UseGuards(JwtGuard, RolesGuard)
-  @Roles(UserRole.ADMIN)
-  createStore(@Body() dto: CreateStoreDto) {
-    return this.storeService.createStore(dto);
+  @Roles(UserRole.ADMIN, UserRole.STORE_OWNER)
+  createStore(
+    @Body() dto: CreateStoreDto,
+    @GetUser('id') userId: string,
+    @GetUser('role') userRole: UserRole,
+  ) {
+    return this.storeService.createStore(dto, userId, userRole);
   }
 
   @Get()

@@ -11,9 +11,24 @@ import { UserRole } from '@prisma/client';
 export class StoreService {
   constructor(private prisma: PrismaService) {}
 
-  async createStore(dto: CreateStoreDto) {
+  async createStore(dto: CreateStoreDto, userId?: string, userRole?: UserRole) {
+    let ownerId = dto.ownerId;
+    
+    // If the user is a STORE_OWNER, they can only create stores for themselves
+    if (userRole === UserRole.STORE_OWNER && userId) {
+      ownerId = userId;
+    }
+    
+    // If no ownerId provided and user is not STORE_OWNER, throw error
+    if (!ownerId) {
+      throw new Error('Owner ID is required');
+    }
+    
     return this.prisma.store.create({
-      data: dto,
+      data: {
+        ...dto,
+        ownerId,
+      },
       include: {
         owner: {
           select: {

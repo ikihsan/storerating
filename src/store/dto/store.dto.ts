@@ -19,8 +19,9 @@ export class CreateStoreDto {
   @MaxLength(400)
   address: string;
 
+  @IsOptional()
   @IsString()
-  ownerId: string;
+  ownerId?: string;
 }
 
 export class UpdateStoreDto {
