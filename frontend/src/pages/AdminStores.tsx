@@ -64,13 +64,10 @@ const AdminStores: React.FC = () => {
     try {
       setLoading(true);
       setError('');
-      console.log('Admin loading stores with filters:', filters);
       
       const data = await adminAPI.getStores(filters);
-      console.log('Admin stores loaded:', data);
       setStores(Array.isArray(data) ? data : []);
     } catch (err: any) {
-      console.error('Error loading admin stores:', err);
       
       if (err.response?.status === 401) {
         setError('Your session has expired. Please log in again.');
@@ -101,7 +98,6 @@ const AdminStores: React.FC = () => {
       reset();
       loadStores();
     } catch (err: any) {
-      console.error('Error creating store:', err);
       setError(
         err.response?.data?.message || 
         err.message || 

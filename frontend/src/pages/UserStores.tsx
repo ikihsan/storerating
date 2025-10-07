@@ -42,18 +42,15 @@ const UserStores: React.FC = () => {
     store: null
   });
 
-  // Debug: Check authentication
+  // Check authentication
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     const user = localStorage.getItem('user');
-    console.log('Auth check - Token exists:', !!token);
-    console.log('Auth check - User exists:', !!user);
     if (user) {
       try {
         const parsedUser = JSON.parse(user);
-        console.log('Auth check - User role:', parsedUser.role);
       } catch (e) {
-        console.error('Auth check - Failed to parse user:', e);
+        // Failed to parse user data
       }
     }
   }, []);
@@ -75,7 +72,6 @@ const UserStores: React.FC = () => {
     try {
       setLoading(true);
       setError('');
-      console.log('Loading stores with filters:', filters);
       
       // Check if user is authenticated
       const token = localStorage.getItem('access_token');
@@ -85,10 +81,8 @@ const UserStores: React.FC = () => {
       }
       
       const data = await storeAPI.getStores(filters);
-      console.log('Stores loaded:', data);
       setStores(Array.isArray(data) ? data : []);
     } catch (err: any) {
-      console.error('Error loading stores:', err);
       
       if (err.response?.status === 401) {
         setError('Your session has expired. Please log in again.');
@@ -138,7 +132,6 @@ const UserStores: React.FC = () => {
       reset();
       await loadStores(); // Refresh to show updated rating
     } catch (err: any) {
-      console.error('Rating submission error:', err);
       setError(
         err.response?.data?.message || 
         err.message || 

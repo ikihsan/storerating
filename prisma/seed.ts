@@ -98,15 +98,11 @@ async function main() {
     },
   });
 
-  console.log('Seeded users:', { admin: admin.email, user: user.email });
-  console.log('Seeded store owners:', { owner1: storeOwner1.email, owner2: storeOwner2.email });
-  console.log('Seeded stores:', { store1: store1.name, store2: store2.name });
 }
 
 main()
   .catch((e) => {
-    console.error(e);
-    process.exit(1);
+    throw e;
   })
   .finally(async () => {
     await prisma.$disconnect();
