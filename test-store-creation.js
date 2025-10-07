@@ -5,33 +5,23 @@ async function testStoreCreation() {
   try {
     console.log('Testing Store Creation Functionality...\n');
     
-    // Step 1: Register a store owner
-    console.log('1. Registering a store owner...');
-    const registerResponse = await axios.post('http://localhost:3000/auth/register', {
-      email: 'storeowner@test.com',
-      password: 'password123',
-      name: 'Test Store Owner',
-      role: 'STORE_OWNER'
-    });
-    
-    console.log('Store owner registered successfully');
-    
-    // Step 2: Login as store owner
-    console.log('2. Logging in as store owner...');
+    // Step 1: Login as STORE_OWNER (skip registration since user already exists)
+    console.log('1. Logging in as STORE_OWNER...');
     const loginResponse = await axios.post('http://localhost:3000/auth/login', {
-      email: 'storeowner@test.com',
-      password: 'password123'
+      email: 'testuser@test.com',
+      password: 'Password123!'
     });
     
     const token = loginResponse.data.access_token;
     console.log('Login successful, token received');
+    console.log('User role:', loginResponse.data.user.role);
     
-    // Step 3: Try to create a store
-    console.log('3. Creating a store...');
+    // Step 2: Try to create a store
+    console.log('2. Creating a store...');
     const createStoreResponse = await axios.post('http://localhost:3000/stores', {
-      name: 'Test Store',
+      name: 'Test Store with Proper Length for Validation Requirements',
       email: 'teststore@test.com',
-      address: '123 Test Street, Test City'
+      address: '123 Test Street, Test City, Test State, 12345'
     }, {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -40,24 +30,29 @@ async function testStoreCreation() {
     
     console.log('Store created successfully:', createStoreResponse.data);
     
-    // Step 4: Verify the store was created
-    console.log('4. Verifying store creation...');
+    // Step 3: Verify the store was created
+    console.log('3. Verifying store creation...');
     const storesResponse = await axios.get('http://localhost:3000/stores/my-stores', {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     });
     
-    console.log('Store owner stores:', storesResponse.data);
+    console.log('User stores:', storesResponse.data);
     
     console.log('\n✅ Store creation test completed successfully!');
     
   } catch (error) {
-    console.error('❌ Test failed:', error.response?.data || error.message);
+    console.error('❌ Test failed:');
+    console.error('Error message:', error.message);
     
     if (error.response) {
       console.error('Status:', error.response.status);
-      console.error('Headers:', error.response.headers);
+      console.error('Response data:', error.response.data);
+    } else if (error.code) {
+      console.error('Error code:', error.code);
+    } else {
+      console.error('Full error:', error);
     }
   }
 }

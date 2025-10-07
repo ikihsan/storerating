@@ -96,7 +96,7 @@ export const createStoreValidationSchema = yup.object({
     .max(400, 'Address must not exceed 400 characters'),
   ownerId: yup
     .string()
-    .required('Store owner is required'),
+    .optional(),
 });
 
 export const ratingValidationSchema = yup.object({

@@ -80,7 +80,7 @@ export interface CreateStoreData {
   name: string;
   email: string;
   address: string;
-  ownerId: string;
+  ownerId?: string;
 }
 
 export interface FilterParams {

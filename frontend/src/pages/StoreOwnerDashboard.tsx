@@ -76,15 +76,20 @@ const StoreOwnerDashboard: React.FC = () => {
   };
 
   const handleCreateStore = async (data: StoreFormData) => {
+    console.log('handleCreateStore called with data:', data);
     try {
       setError('');
-      await storeAPI.createStore(data);
+      console.log('Calling storeAPI.createStore...');
+      const result = await storeAPI.createStore(data);
+      console.log('Store created successfully:', result);
       setSuccess('Store created successfully!');
       setOpenCreateDialog(false);
       reset();
       loadDashboard();
     } catch (err: any) {
       console.error('Error creating store:', err);
+      console.error('Error response:', err.response);
+      console.error('Error message:', err.message);
       setError(
         err.response?.data?.message || 
         err.message || 
@@ -164,7 +169,10 @@ const StoreOwnerDashboard: React.FC = () => {
           maxWidth="sm"
           fullWidth
         >
-          <form onSubmit={handleSubmit(handleCreateStore)}>
+          <form onSubmit={(e) => {
+            console.log('Form submitted!', e);
+            handleSubmit(handleCreateStore)(e);
+          }}>
             <DialogTitle>Create Your Store</DialogTitle>
             <DialogContent>
               <Box display="flex" flexDirection="column" gap={2} pt={1}>
